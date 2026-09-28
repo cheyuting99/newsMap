@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Newsmap — world news by country</title>
+<meta name="description" content="A world map of today's news. Click a country to see its stories.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗺️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ocean:#DCE6EA; --land:#F5F6F2; --border:#B7C2C5; --ink:#15252A; --muted:#5A6B70;
+  --panel:#FFFFFF; --panel-2:#F2F5F5; --line:#DDE3E4; --pick:#F0B447; --pick-ink:#3A2600;
+  --heat-lo:#A7D8CB; --heat-hi:#0D5A53; --badge:#15252A; --badge-ink:#FFFFFF; --link:#0D5A53;
+  --shadow:0 10px 30px rgba(21,37,42,.14);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ocean:#0F1D22; --land:#22333A; --border:#3A4E55; --ink:#E7EEEF; --muted:#9DB0B4;
+  --panel:#16262C; --panel-2:#1D2F36; --line:#2C4047; --pick:#F0B447; --pick-ink:#2A1B00;
+  --heat-lo:#2F6E66; --heat-hi:#7FE0C9; --badge:#F2F6F6; --badge-ink:#0F1D22; --link:#8FE3CF;
+  --shadow:0 10px 30px rgba(0,0,0,.45);
+}}
+:root[data-theme="dark"]{
+  --ocean:#0F1D22; --land:#22333A; --border:#3A4E55; --ink:#E7EEEF; --muted:#9DB0B4;
+  --panel:#16262C; --panel-2:#1D2F36; --line:#2C4047; --pick:#F0B447; --pick-ink:#2A1B00;
+  --heat-lo:#2F6E66; --heat-hi:#7FE0C9; --badge:#F2F6F6; --badge-ink:#0F1D22; --link:#8FE3CF;
+  --shadow:0 10px 30px rgba(0,0,0,.45);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:var(--ocean);color:var(--ink);
+  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.45;overflow:hidden}
+.app{position:relative;height:100%;overflow:hidden}
+#map{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#map:active{cursor:grabbing}
+.country{fill:var(--land);stroke:var(--border);stroke-width:.5;vector-effect:non-scaling-stroke;transition:fill .15s}
+.country.has{cursor:pointer}
+.country.has:hover{filter:brightness(1.08)}
+.country.sel{fill:var(--pick)!important;stroke:var(--ink);stroke-width:1.2}
+.badge{cursor:pointer}
+.badge circle{fill:var(--badge);stroke:var(--ocean);stroke-width:2}
+.badge text{fill:var(--badge-ink);font-weight:700;font-size:11px;font-family:"Archivo",system-ui,sans-serif;text-anchor:middle;dominant-baseline:central;pointer-events:none;font-variant-numeric:tabular-nums}
+.badge.sel circle{fill:var(--pick);stroke:var(--ink)}
+.badge.sel text{fill:var(--pick-ink)}
+
+/* Header */
+.masthead{position:absolute;top:16px;left:16px;z-index:5;background:var(--panel);border-radius:14px;box-shadow:var(--shadow);
+  padding:14px 18px 14px 16px;max-width:min(360px,calc(100% - 32px))}
+.masthead h1{margin:0;font-size:28px;line-height:1;font-weight:800;font-stretch:118%;letter-spacing:-.01em}
+.masthead p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.masthead p strong{color:var(--ink);font-weight:650}
+.legend{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:var(--muted)}
+.legend .bar{width:96px;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--heat-lo),var(--heat-hi))}
+
+/* Zoom */
+.zoom{position:absolute;right:16px;bottom:96px;z-index:5;display:flex;flex-direction:column;background:var(--panel);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.zoom button{width:40px;height:40px;border:0;background:none;color:var(--ink);font:600 20px/1 "Archivo",system-ui,sans-serif;cursor:pointer}
+.zoom button+button{border-top:1px solid var(--line)}
+.zoom button:hover{background:var(--panel-2)}
+.zoom .reset{font-size:12px}
+
+/* Country strip */
+.strip{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:12px 16px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.strip{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);padding-right:48px}
+.chip{flex:none;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:999px;padding:7px 8px 7px 14px;font:500 14px/1 "Archivo",system-ui,sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(21,37,42,.08)}
+.chip b{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--badge);color:var(--badge-ink);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+.chip:hover{border-color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--pick);color:var(--pick-ink);border-color:var(--pick)}
+
+/* Tooltip */
+.tip{position:absolute;z-index:6;pointer-events:none;background:var(--ink);color:var(--panel);padding:6px 10px;border-radius:8px;font-size:13px;white-space:nowrap;opacity:0;transform:translate(-50%,calc(-100% - 12px));transition:opacity .1s}
+.tip.on{opacity:1}
+.notice{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;background:var(--panel);box-shadow:var(--shadow);border-radius:14px;padding:18px 22px;max-width:min(360px,calc(100% - 32px));text-align:center;font-size:15px}
+.notice[hidden]{display:none}
+.notice code{font-size:13px;background:var(--panel-2);padding:1px 5px;border-radius:4px}
+.notice button{margin-top:12px;font:600 14px "Archivo",system-ui,sans-serif;color:var(--link);background:none;border:1px solid currentColor;border-radius:8px;padding:7px 12px;cursor:pointer}
+
+/* Sidebar */
+.sidebar{position:absolute;top:0;right:0;bottom:0;z-index:8;width:min(420px,100%);background:var(--panel);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;transform:translateX(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.sidebar.open{transform:none}
+.sb-head{padding:20px 20px 14px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:12px}
+.sb-head h2{margin:0;font-size:26px;line-height:1.1;font-weight:800;font-stretch:112%}
+.sb-head p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.close{margin-left:auto;flex:none;width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:none;color:var(--ink);font-size:20px;line-height:1;cursor:pointer}
+.close:hover{background:var(--panel-2)}
+.list{list-style:none;margin:0;padding:6px 0 24px;overflow-y:auto;flex:1}
+.item{padding:16px 20px;border-bottom:1px solid var(--line)}
+.item .meta{font-size:13px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+.item .meta span+span::before{content:"";display:inline-block;width:4px;height:4px;border-radius:2px;background:var(--border);vertical-align:middle;margin-right:10px}
+.item h3{margin:6px 0 6px;font-size:18px;line-height:1.3;font-weight:650}
+.item h3 a{color:var(--ink);text-decoration:none}
+.item h3 a:hover{text-decoration:underline;text-underline-offset:3px}
+.item p{margin:0;color:var(--muted);font-size:15px;max-width:60ch}
+.item .row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.read{font-size:14px;font-weight:650;color:var(--link);text-decoration:none;border:1px solid currentColor;border-radius:8px;padding:6px 10px}
+.read:hover{background:var(--panel-2)}
+.also{font-size:12px;color:var(--muted);background:var(--panel-2);border:0;border-radius:6px;padding:5px 8px;cursor:pointer;font-family:inherit}
+.also:hover{color:var(--ink)}
+.sb-foot{padding:12px 20px;font-size:12px;color:var(--muted);border-top:1px solid var(--line)}
+
+:focus-visible{outline:3px solid var(--pick);outline-offset:2px}
+
+@media (max-width:640px){
+  .masthead{top:12px;left:12px;padding:12px 14px}
+  .masthead h1{font-size:22px}
+  .legend{display:none}
+  .zoom{right:12px;bottom:84px}
+  .sidebar{top:auto;height:72%;width:100%;border-radius:18px 18px 0 0;transform:translateY(105%);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .sidebar.open{transform:none}
+  .sb-head::before{content:"";position:absolute;top:8px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:2px;background:var(--line)}
+  .sb-head{position:relative;padding-top:24px}
+}
+@media (max-height:500px) and (orientation:landscape){
+  .masthead{top:8px;left:8px;padding:8px 12px;border-radius:10px}
+  .masthead h1{font-size:18px}
+  .masthead p{font-size:12px;margin-top:3px}
+  .legend{display:none}
+  .zoom{right:8px;bottom:60px}
+  .zoom button{width:34px;height:34px;font-size:17px}
+  .strip{padding:6px 8px 8px}
+  .chip{padding:5px 6px 5px 10px;font-size:13px}
+  .sb-head{padding:12px 16px 10px}
+  .sb-head h2{font-size:20px}
+}
+@media (prefers-reduced-motion:reduce){.sidebar,.country,.tip{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <svg id="map" role="img" aria-label="World map with the number of news stories per country"></svg>
+
+  <header class="masthead">
+    <h1>Newsmap</h1>
+    <p id="summary"></p>
+    <div class="legend" aria-hidden="true"><span>Fewer</span><span class="bar"></span><span>More stories</span></div>
+  </header>
+
+  <div class="zoom" role="group" aria-label="Map zoom">
+    <button id="zin" aria-label="Zoom in">+</button>
+    <button id="zout" aria-label="Zoom out">−</button>
+    <button id="zreset" class="reset" aria-label="Reset map view">Fit</button>
+  </div>
+
+  <nav class="strip" id="strip" aria-label="Countries with news"></nav>
+  <div class="tip" id="tip"></div>
+  <div class="notice" id="notice" role="status">Loading today's news…</div>
+
+  <aside class="sidebar" id="sidebar" aria-hidden="true" aria-labelledby="sb-title">
+    <div class="sb-head">
+      <div>
+        <h2 id="sb-title"></h2>
+        <p id="sb-sub"></p>
+      </div>
+      <button class="close" id="close" aria-label="Close news list">×</button>
+    </div>
+    <ul class="list" id="list"></ul>
+    <div class="sb-foot" id="sb-foot"></div>
+  </aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+// Badge positions for countries whose geometric centre is misleading or crowded
+const ANCHOR = {"840":[-98,39],"250":[2.4,46.6],"124":[-103,57],"376":[33.4,29.9],"275":[37.8,33.2],"826":[-1.6,53],"392":[138.5,36.6],"156":[104,34],"643":[95,61],"578":[9,61],"360":[114,-1],"152":[-71,-33]};
+
+const $ = id => document.getElementById(id);
+const svg = d3.select("#map");
+const root = svg.append("g"), gLand = root.append("g"), gBadges = root.append("g");
+const tip = $("tip"), notice = $("notice"), strip = $("strip"), sidebar = $("sidebar"), list = $("list");
+
+let userMoved = false;
+let GEO, byCountry = new Map(), names = new Map(), countries = [], maxN = 1, selected = null, k = 1, projection, path;
+const nameOf = id => names.get(id) || id;
+
+// ---------- time helpers
+const fmtDay = new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric"});
+const fmtFull = new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+function ago(iso){
+  const d = new Date(iso), mins = Math.round((Date.now()-d)/60000);
+  if (isNaN(d)) return "";
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins} min ago`;
+  const h = Math.round(mins/60);
+  if (h < 24) return `${h} hr ago`;
+  return fmtDay.format(d);
+}
+
+// ---------- load
+async function load(){
+  notice.hidden = false; notice.textContent = "Loading today's news…";
+  try{
+    if (location.protocol === "file:") throw {kind:"file"};
+    const get = async (file, opts) => {
+      let r;
+      try { r = await fetch(file, opts); } catch { throw {kind:"network", file}; }
+      if (!r.ok) throw {kind: r.status === 404 ? "missing" : "status", file, status: r.status};
+      try { return await r.json(); } catch { throw {kind:"broken", file}; }
+    };
+    const [geo, news] = await Promise.all([ get("data/world.json"), get("data/news.json", {cache:"no-cache"}) ]);
+    GEO = geo;
+    names = new Map(GEO.features.map(f=>[f.id,f.properties.n]));
+    const valid = new Set(names.keys());
+    byCountry = new Map();
+    (news.stories||[]).forEach(n=>n.c.forEach(id=>{
+      if(!valid.has(id)) return;
+      if(!byCountry.has(id)) byCountry.set(id,[]);
+      byCountry.get(id).push(n);
+    }));
+    byCountry.forEach(a=>a.sort((x,y)=>y.d.localeCompare(x.d)));
+    countries = [...byCountry.keys()].sort((a,b)=>byCountry.get(b).length-byCountry.get(a).length || nameOf(a).localeCompare(nameOf(b)));
+    maxN = d3.max(countries, id=>byCountry.get(id).length) || 1;
+    const total = new Set([].concat(...[...byCountry.values()].map(a=>a.map(s=>s.id||s.u)))).size;
+
+    const up = news.updated ? new Date(news.updated) : null;
+    $("summary").innerHTML = `<strong>${total} stories</strong> in ${countries.length} countries.` +
+      (up && !isNaN(up) ? ` Updated <time datetime="${news.updated}" title="${fmtFull.format(up)}">${ago(news.updated)}</time>.` : "");
+    $("sb-foot").textContent = up && !isNaN(up) ? `News updated ${fmtFull.format(up)}. Links open the original article in a new tab.` : "Links open the original article in a new tab.";
+
+    buildStrip();
+    draw();
+    startView();
+    if (!countries.length){ notice.textContent = "No stories have been collected yet. The next update will fill the map."; }
+    else notice.hidden = true;
+  }catch(e){
+    const msg = {
+      file: "This page was opened as a file, so the browser won't let it read its news data. Open your GitHub Pages address instead, or preview it with <code>python3 -m http.server</code> (see the README).",
+      missing: `<code>${e.file}</code> wasn't found on the site. Check that the <code>data</code> folder, with both files inside it, was uploaded to the repository.`,
+      broken: `<code>${e.file}</code> is damaged or empty. Re-upload it, or run the update workflow on the Actions tab.`,
+      status: `The site answered with error ${e.status} for <code>${e.file}</code>. Try again in a minute.`,
+      network: "Couldn't reach the site. Check your internet connection and try again."
+    }[e && e.kind] || `Something went wrong while showing the news (${(e && e.message) || e}).`;
+    notice.innerHTML = msg + "<br><button id='retry'>Try again</button>";
+    $("retry").onclick = load;
+    console.error("Newsmap load error: " + (e instanceof Error ? e.stack : JSON.stringify(e)));
+  }
+}
+
+// ---------- map
+function heat(n){
+  const cs = getComputedStyle(document.documentElement);
+  const lo = cs.getPropertyValue("--heat-lo").trim(), hi = cs.getPropertyValue("--heat-hi").trim();
+  const t = maxN<=1 ? 1 : Math.sqrt((n-1)/(maxN-1));
+  return d3.interpolateRgb(lo,hi)(.15+.85*t);
+}
+function draw(){
+  if(!GEO) return;
+  const w = svg.node().clientWidth, h = svg.node().clientHeight, small = w < 640;
+  projection = d3.geoNaturalEarth1().fitExtent([[12, small?90:70],[w-12,h-(small?70:80)]], GEO);
+  path = d3.geoPath(projection);
+
+  gLand.selectAll("path").data(GEO.features, d=>d.id).join("path")
+    .attr("class", d=>"country"+(byCountry.has(d.id)?" has":"")+(d.id===selected?" sel":""))
+    .attr("d", path)
+    .style("fill", d=>byCountry.has(d.id)?heat(byCountry.get(d.id).length):null)
+    .on("mousemove", (e,d)=>showTip(e,d.id)).on("mouseleave", hideTip)
+    .on("click", (e,d)=>{ if(byCountry.has(d.id)) select(d.id); });
+
+  const bd = countries.map(id=>{
+    const f = GEO.features.find(x=>x.id===id);
+    const p = projection(ANCHOR[id] || d3.geoCentroid(f));
+    return {id, x:p[0], y:p[1], n:byCountry.get(id).length};
+  });
+  const b = gBadges.selectAll("g.badge").data(bd, d=>d.id).join(enter=>{
+    const g = enter.append("g").attr("class","badge"); g.append("circle"); g.append("text"); return g;
+  });
+  b.classed("sel", d=>d.id===selected)
+   .attr("transform", d=>`translate(${d.x},${d.y}) scale(${1/k})`)
+   .on("mousemove", (e,d)=>showTip(e,d.id)).on("mouseleave", hideTip)
+   .on("click", (e,d)=>{ e.stopPropagation(); select(d.id); });
+  const tiny = Math.min(w,h) < 500;
+  b.select("circle").attr("r", d=>(d.n>=100?15:d.n>=10?13:11) - (tiny?2.5:0));
+  b.select("text").style("font-size", tiny?"9.5px":null);
+  b.select("text").text(d=>d.n);
+}
+function showTip(e,id){
+  const n = byCountry.get(id)?.length || 0;
+  tip.textContent = n ? `${nameOf(id)}: ${n} ${n===1?"story":"stories"}` : `${nameOf(id)}: no stories right now`;
+  const r = svg.node().getBoundingClientRect();
+  tip.style.left = (e.clientX-r.left)+"px"; tip.style.top = (e.clientY-r.top)+"px";
+  tip.classList.add("on");
+}
+function hideTip(){ tip.classList.remove("on"); }
+
+const zoom = d3.zoom().scaleExtent([1,12]).on("zoom", e=>{
+  if (e.sourceEvent) userMoved = true;
+  k = e.transform.k; root.attr("transform", e.transform);
+  gBadges.selectAll("g.badge").attr("transform", d=>`translate(${d.x},${d.y}) scale(${1/k})`);
+  hideTip();
+});
+svg.call(zoom).on("dblclick.zoom", null);
+$("zin").onclick = ()=>(userMoved=true)&&svg.transition().duration(250).call(zoom.scaleBy, 1.6);
+$("zout").onclick = ()=>(userMoved=true)&&svg.transition().duration(250).call(zoom.scaleBy, 1/1.6);
+$("zreset").onclick = ()=>(userMoved=true)&&svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity);
+
+// ---------- country strip
+function buildStrip(){
+  strip.innerHTML = "";
+  countries.forEach(id=>{
+    const b = document.createElement("button");
+    b.className = "chip"; b.dataset.id = id; b.setAttribute("aria-pressed", id===selected?"true":"false");
+    b.innerHTML = `<span></span><b></b>`;
+    b.querySelector("span").textContent = nameOf(id);
+    b.querySelector("b").textContent = byCountry.get(id).length;
+    b.onclick = ()=>select(id);
+    strip.appendChild(b);
+  });
+}
+
+// ---------- sidebar
+function select(id){
+  if(!byCountry.has(id)) return;
+  selected = id;
+  gLand.selectAll("path").classed("sel", d=>d.id===id);
+  gBadges.selectAll("g.badge").classed("sel", d=>d.id===id);
+  strip.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed", c.dataset.id===id?"true":"false"));
+  const items = byCountry.get(id);
+  $("sb-title").textContent = nameOf(id);
+  $("sb-sub").textContent = `${items.length} ${items.length===1?"story":"stories"}, newest first`;
+  list.innerHTML = "";
+  items.forEach(n=>{
+    const li = document.createElement("li"); li.className = "item";
+    const meta = document.createElement("div"); meta.className = "meta";
+    const s1 = document.createElement("span"); s1.textContent = n.src;
+    const s2 = document.createElement("span"); s2.textContent = ago(n.d); s2.title = fmtFull.format(new Date(n.d));
+    meta.append(s1,s2);
+    const h = document.createElement("h3"), a = document.createElement("a");
+    a.href = n.u; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = n.t; h.appendChild(a);
+    li.append(meta,h);
+    if(n.s){ const p = document.createElement("p"); p.textContent = n.s; li.appendChild(p); }
+    const row = document.createElement("div"); row.className = "row";
+    const read = document.createElement("a"); read.className = "read"; read.href = n.u; read.target = "_blank"; read.rel = "noopener noreferrer";
+    read.textContent = `Read on ${n.src}`; row.appendChild(read);
+    n.c.filter(c=>c!==id && byCountry.has(c)).forEach(c=>{
+      const t = document.createElement("button"); t.className = "also"; t.textContent = `Also in ${nameOf(c)}`;
+      t.onclick = ()=>select(c); row.appendChild(t);
+    });
+    li.appendChild(row); list.appendChild(li);
+  });
+  list.scrollTop = 0;
+  sidebar.classList.add("open"); sidebar.setAttribute("aria-hidden","false");
+  history.replaceState(null, "", "#"+encodeURIComponent(id));
+  $("close").focus({preventScroll:true});
+}
+function closeSidebar(){
+  sidebar.classList.remove("open"); sidebar.setAttribute("aria-hidden","true");
+  const prev = selected; selected = null;
+  gLand.selectAll("path").classed("sel", false);
+  gBadges.selectAll("g.badge").classed("sel", false);
+  strip.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+  history.replaceState(null, "", location.pathname + location.search);
+  const chip = strip.querySelector(`[data-id="${prev}"]`); if(chip) chip.focus({preventScroll:true});
+}
+$("close").onclick = closeSidebar;
+document.addEventListener("keydown", e=>{ if(e.key==="Escape" && sidebar.classList.contains("open")) closeSidebar(); });
+
+function startView(){
+  const w = svg.node().clientWidth, h = svg.node().clientHeight;
+  if (w >= 600 || h < w * 1.2) { svg.call(zoom.transform, d3.zoomIdentity); return; }
+  // Tall phone screen: zoom so the map uses the height, centred on Europe, Africa and the Middle East.
+  const [[x0,y0],[x1,y1]] = path.bounds(GEO);
+  const kk = Math.min(Math.max((h*0.62)/(y1-y0), 1), 3);
+  const [cx, cy] = projection([22, 18]);
+  svg.call(zoom.transform, d3.zoomIdentity.translate(w/2 - kk*cx, h/2 - kk*cy + 10).scale(kk));
+}
+let rt; window.addEventListener("resize", ()=>{ clearTimeout(rt); rt = setTimeout(()=>{ draw(); if(!userMoved) startView(); },120); });
+strip.addEventListener("wheel", e=>{ if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){ strip.scrollLeft += e.deltaY; e.preventDefault(); } }, {passive:false});
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", draw);
+
+load().then(()=>{ const id = decodeURIComponent(location.hash.slice(1)); if(id) select(id); });
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+[
+  {"source": "BBC News", "url": "https://feeds.bbci.co.uk/news/world/rss.xml"},
+  {"source": "BBC News", "url": "https://feeds.bbci.co.uk/news/world/africa/rss.xml"},
+  {"source": "BBC News", "url": "https://feeds.bbci.co.uk/news/world/asia/rss.xml"},
+  {"source": "BBC News", "url": "https://feeds.bbci.co.uk/news/world/europe/rss.xml"},
+  {"source": "BBC News", "url": "https://feeds.bbci.co.uk/news/world/latin_america/rss.xml"},
+  {"source": "BBC News", "url": "https://feeds.bbci.co.uk/news/world/middle_east/rss.xml"},
+  {"source": "BBC News", "url": "https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml"},
+  {"source": "Al Jazeera", "url": "https://www.aljazeera.com/xml/rss/all.xml"},
+  {"source": "The Guardian", "url": "https://www.theguardian.com/world/rss"},
+  {"source": "NPR", "url": "https://feeds.npr.org/1004/rss.xml"},
+  {"source": "DW", "url": "https://rss.dw.com/rdf/rss-en-world"},
+  {"source": "France 24", "url": "https://www.france24.com/en/rss"},
+  {"source": "CBC News", "url": "https://www.cbc.ca/webfeed/rss/rss-world"}
+]
