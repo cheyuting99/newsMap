@@ -35,16 +35,6 @@ The news feeds are in English, so the daily job translates new stories into Chin
 Google Gemini API. This is optional; without it, CN mode shows the Chinese interface and country names,
 with English headlines.
 
-1. Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/apikey).
-   See Google’s [API key guide](https://ai.google.dev/gemini-api/docs/api-key) for setup details.
-2. In your GitHub repository go to **Settings → Secrets and variables → Actions →
-   New repository secret**. Name it `GEMINI_API_KEY` and paste the key. Click **Add secret**.
-3. Run the workflow once from the **Actions** tab. The log shows a line such as
-   `Translated 142 new stories into Chinese.`
-
-The workflow passes this secret to the updater as `GEMINI_API_KEY`. For local updates, set
-the same environment variable before running `python3 scripts/fetch_news.py`.
-
 Only new stories are translated; earlier translations are reused to reduce API usage.
 Costs and quotas depend on your Gemini model and account; check the current
 [Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing).
