@@ -33,7 +33,7 @@
 *,*::before,*::after{box-sizing:inherit}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
 body{height:100%;margin:0;background:var(--ocean);color:var(--ink);
-  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.45;overflow:hidden}
+  font-family:"Archivo","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.45;overflow:hidden}
 .app{position:relative;height:100%;overflow:hidden}
 #map{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
 #map:active{cursor:grabbing}
@@ -43,22 +43,34 @@ body{height:100%;margin:0;background:var(--ocean);color:var(--ink);
 .country.sel{fill:var(--pick)!important;stroke:var(--ink);stroke-width:1.2}
 .badge{cursor:pointer}
 .badge circle{fill:var(--badge);stroke:var(--ocean);stroke-width:2}
-.badge text{fill:var(--badge-ink);font-weight:700;font-size:11px;font-family:"Archivo",system-ui,sans-serif;text-anchor:middle;dominant-baseline:central;pointer-events:none;font-variant-numeric:tabular-nums}
+.badge text{fill:var(--badge-ink);font-weight:700;font-size:11px;font-family:"Archivo","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;text-anchor:middle;dominant-baseline:central;pointer-events:none;font-variant-numeric:tabular-nums}
 .badge.sel circle{fill:var(--pick);stroke:var(--ink)}
 .badge.sel text{fill:var(--pick-ink)}
 
 /* Header */
 .masthead{position:absolute;top:16px;left:16px;z-index:5;background:var(--panel);border-radius:14px;box-shadow:var(--shadow);
   padding:14px 18px 14px 16px;max-width:min(360px,calc(100% - 32px))}
-.masthead h1{margin:0;font-size:28px;line-height:1;font-weight:800;font-stretch:118%;letter-spacing:-.01em}
+.masthead h1{margin:0;white-space:nowrap;font-size:28px;line-height:1;font-weight:800;font-stretch:118%;letter-spacing:-.01em}
 .masthead p{margin:6px 0 0;color:var(--muted);font-size:14px}
 .masthead p strong{color:var(--ink);font-weight:650}
+.mh-top{display:flex;align-items:center;gap:14px}
+.lang{margin-left:auto;display:inline-flex;border:1px solid var(--line);border-radius:9px;padding:2px;background:var(--panel-2)}
+.lang button{border:0;background:none;color:var(--muted);font:600 13px/1 "Archivo","PingFang SC","Microsoft YaHei",system-ui,sans-serif;padding:6px 9px;border-radius:7px;cursor:pointer;letter-spacing:.02em}
+.lang button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(21,37,42,.15)}
+.lang button:hover{color:var(--ink)}
+:lang(zh) .masthead h1{font-stretch:100%;letter-spacing:.04em}
+.src-note{margin:0 0 6px;font-size:12px;color:var(--muted)}
+.item .alt-title{margin:-2px 0 6px;font-size:17px;line-height:1.45;font-weight:600;color:var(--ink)}
+.item .alt-sum{margin-top:6px}
+.item :lang(zh){font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif}
+.chip .zh{color:var(--muted);margin-left:4px}
+.chip[aria-pressed="true"] .zh{color:inherit;opacity:.8}
 .legend{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:var(--muted)}
 .legend .bar{width:96px;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--heat-lo),var(--heat-hi))}
 
 /* Zoom */
 .zoom{position:absolute;right:16px;bottom:96px;z-index:5;display:flex;flex-direction:column;background:var(--panel);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
-.zoom button{width:40px;height:40px;border:0;background:none;color:var(--ink);font:600 20px/1 "Archivo",system-ui,sans-serif;cursor:pointer}
+.zoom button{width:40px;height:40px;border:0;background:none;color:var(--ink);font:600 20px/1 "Archivo","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;cursor:pointer}
 .zoom button+button{border-top:1px solid var(--line)}
 .zoom button:hover{background:var(--panel-2)}
 .zoom .reset{font-size:12px}
@@ -68,7 +80,7 @@ body{height:100%;margin:0;background:var(--ocean);color:var(--ink);
 .strip::-webkit-scrollbar{display:none}
 .strip{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);padding-right:48px}
 .chip{flex:none;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);
-  border-radius:999px;padding:7px 8px 7px 14px;font:500 14px/1 "Archivo",system-ui,sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(21,37,42,.08)}
+  border-radius:999px;padding:7px 8px 7px 14px;font:500 14px/1 "Archivo","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(21,37,42,.08)}
 .chip b{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--badge);color:var(--badge-ink);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
 .chip:hover{border-color:var(--muted)}
 .chip[aria-pressed="true"]{background:var(--pick);color:var(--pick-ink);border-color:var(--pick)}
@@ -79,7 +91,7 @@ body{height:100%;margin:0;background:var(--ocean);color:var(--ink);
 .notice{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;background:var(--panel);box-shadow:var(--shadow);border-radius:14px;padding:18px 22px;max-width:min(360px,calc(100% - 32px));text-align:center;font-size:15px}
 .notice[hidden]{display:none}
 .notice code{font-size:13px;background:var(--panel-2);padding:1px 5px;border-radius:4px}
-.notice button{margin-top:12px;font:600 14px "Archivo",system-ui,sans-serif;color:var(--link);background:none;border:1px solid currentColor;border-radius:8px;padding:7px 12px;cursor:pointer}
+.notice button{margin-top:12px;font:600 14px "Archivo","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;color:var(--link);background:none;border:1px solid currentColor;border-radius:8px;padding:7px 12px;cursor:pointer}
 
 /* Sidebar */
 .sidebar{position:absolute;top:0;right:0;bottom:0;z-index:8;width:min(420px,100%);background:var(--panel);box-shadow:var(--shadow);
@@ -117,9 +129,11 @@ body{height:100%;margin:0;background:var(--ocean);color:var(--ink);
   .sb-head::before{content:"";position:absolute;top:8px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:2px;background:var(--line)}
   .sb-head{position:relative;padding-top:24px}
 }
+@media (max-width:420px){ .masthead h1{font-size:20px} .mh-top{gap:10px} }
 @media (max-height:500px) and (orientation:landscape){
   .masthead{top:8px;left:8px;padding:8px 12px;border-radius:10px}
   .masthead h1{font-size:18px}
+  .lang button{padding:4px 7px;font-size:12px}
   .masthead p{font-size:12px;margin-top:3px}
   .legend{display:none}
   .zoom{right:8px;bottom:60px}
@@ -137,9 +151,16 @@ body{height:100%;margin:0;background:var(--ocean);color:var(--ink);
   <svg id="map" role="img" aria-label="World map with the number of news stories per country"></svg>
 
   <header class="masthead">
-    <h1>Newsmap</h1>
+    <div class="mh-top">
+      <h1 id="brand">Newsmap</h1>
+      <div class="lang" role="group" id="lang-group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="zh" aria-pressed="false" title="中文">CN</button>
+        <button type="button" data-lang="both" aria-pressed="false" title="English + 中文">Both</button>
+      </div>
+    </div>
     <p id="summary"></p>
-    <div class="legend" aria-hidden="true"><span>Fewer</span><span class="bar"></span><span>More stories</span></div>
+    <div class="legend" aria-hidden="true"><span id="lg-lo">Fewer</span><span class="bar"></span><span id="lg-hi">More stories</span></div>
   </header>
 
   <div class="zoom" role="group" aria-label="Map zoom">
@@ -167,6 +188,77 @@ body{height:100%;margin:0;background:var(--ocean);color:var(--ink);
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script>
+// ---------- text in each language
+const TEXT = {
+  en: {
+    htmlLang: "en", locale: "en", brand: "Newsmap", title: "Newsmap — world news by country",
+    loading: "Loading today's news…",
+    summary: (n, c) => `<strong>${n} ${n === 1 ? "story" : "stories"}</strong> in ${c} ${c === 1 ? "country" : "countries"}.`,
+    updated: t => ` Updated ${t}.`,
+    empty: "No stories have been collected yet. The next update will fill the map.",
+    fewer: "Fewer", more: "More stories",
+    mapLabel: "World map with the number of news stories per country",
+    zoomGroup: "Map zoom", zin: "Zoom in", zout: "Zoom out", fitLabel: "Reset map view", fit: "Fit",
+    stripLabel: "Countries with news", langLabel: "Language", close: "Close news list",
+    tip: (name, n) => n ? `${name}: ${n} ${n === 1 ? "story" : "stories"}` : `${name}: no stories right now`,
+    sbSub: n => `${n} ${n === 1 ? "story" : "stories"}, newest first`,
+    read: src => `Read on ${src}`, also: c => `Also in ${c}`,
+    srcNote: "",
+    foot: t => t ? `News updated ${t}. Links open the original article in a new tab.` : "Links open the original article in a new tab.",
+    now: "just now", mins: m => `${m} min ago`, hours: h => `${h} hr ago`,
+    retry: "Try again",
+    err: {
+      file: "This page was opened as a file, so the browser won't let it read its news data. Open your website address instead, or preview it with <code>python3 -m http.server</code> (see the README).",
+      missing: f => `<code>${f}</code> wasn't found on the site. Check that the <code>data</code> folder, with both files inside it, was uploaded to the repository.`,
+      broken: f => `<code>${f}</code> is damaged or empty. Re-upload it, or run the update workflow on the Actions tab.`,
+      status: (f, st) => `The site answered with error ${st} for <code>${f}</code>. Try again in a minute.`,
+      network: "Couldn't reach the site. Check your internet connection and try again.",
+      other: m => `Something went wrong while showing the news (${m}).`
+    }
+  },
+  zh: {
+    htmlLang: "zh-CN", locale: "zh-CN", brand: "新闻地图", title: "新闻地图 — 按国家浏览世界新闻",
+    loading: "正在加载今日新闻…",
+    summary: (n, c) => `<strong>${c} 个国家和地区</strong>，共 ${n} 条新闻。`,
+    updated: t => `更新于${t}。`,
+    empty: "暂未收集到新闻，下次更新后地图上会显示新闻。",
+    fewer: "较少", more: "较多",
+    mapLabel: "世界地图，标注各国家和地区的新闻数量",
+    zoomGroup: "地图缩放", zin: "放大", zout: "缩小", fitLabel: "显示全图", fit: "全图",
+    stripLabel: "有新闻的国家和地区", langLabel: "语言", close: "关闭新闻列表",
+    tip: (name, n) => n ? `${name}：${n} 条新闻` : `${name}：暂无新闻`,
+    sbSub: n => `${n} 条新闻，按时间从新到旧排列`,
+    read: src => `在 ${src} 阅读原文`, also: c => `也涉及${c}`,
+    srcNote: "标题和摘要由英文原文自动翻译；尚未翻译的新闻显示英文原文。点击链接可阅读英文原文。",
+    foot: t => t ? `新闻更新于 ${t}。链接将在新标签页中打开原文。` : "链接将在新标签页中打开原文。",
+    now: "刚刚", mins: m => `${m} 分钟前`, hours: h => `${h} 小时前`,
+    retry: "重试",
+    err: {
+      file: "此页面是以文件方式直接打开的，浏览器不允许它读取新闻数据。请通过网站地址访问，或使用 <code>python3 -m http.server</code> 在本地预览（见 README）。",
+      missing: f => `网站上找不到 <code>${f}</code>。请确认 <code>data</code> 文件夹及其中的两个文件都已上传到仓库。`,
+      broken: f => `<code>${f}</code> 已损坏或为空。请重新上传，或在 Actions 页面运行更新任务。`,
+      status: (f, st) => `网站在读取 <code>${f}</code> 时返回错误 ${st}。请稍后重试。`,
+      network: "无法连接到网站，请检查网络连接后重试。",
+      other: m => `显示新闻时出错（${m}）。`
+    }
+  }
+};
+
+// "Both": English interface, with Chinese next to country names and every story.
+TEXT.both = Object.assign({}, TEXT.en, {
+  brand: "Newsmap 新闻地图", title: "Newsmap · 新闻地图 — world news by country",
+  srcNote: "Chinese text is machine-translated from the English original. 中文为英文原文的自动翻译。"
+});
+
+// Language: saved choice, else the browser's language.
+function initialLang(){
+  try { const saved = localStorage.getItem("newsmap-lang"); if (saved in TEXT) return saved;
+    const q = new URLSearchParams(location.search).get("lang"); if (q in TEXT) return q; } catch {}
+  return (navigator.languages || [navigator.language || ""]).some(l => /^zh\b/i.test(l)) ? "zh" : "en";
+}
+let lang = initialLang();
+const T = () => TEXT[lang];
+
 // Badge positions for countries whose geometric centre is misleading or crowded
 const ANCHOR = {"840":[-98,39],"250":[2.4,46.6],"124":[-103,57],"376":[33.4,29.9],"275":[37.8,33.2],"826":[-1.6,53],"392":[138.5,36.6],"156":[104,34],"643":[95,61],"578":[9,61],"360":[114,-1],"152":[-71,-33]};
 
@@ -175,26 +267,58 @@ const svg = d3.select("#map");
 const root = svg.append("g"), gLand = root.append("g"), gBadges = root.append("g");
 const tip = $("tip"), notice = $("notice"), strip = $("strip"), sidebar = $("sidebar"), list = $("list");
 
-let userMoved = false;
-let GEO, byCountry = new Map(), names = new Map(), countries = [], maxN = 1, selected = null, k = 1, projection, path;
-const nameOf = id => names.get(id) || id;
+let userMoved = false, lastError = null, NEWS = null;
+let GEO, byCountry = new Map(), countries = [], maxN = 1, selected = null, k = 1, projection, path;
+const namesEn = new Map(), namesZh = new Map();
+const nameEn = id => namesEn.get(id) || id;
+const nameZh = id => namesZh.get(id) || nameEn(id);
+const nameOf = id => lang === "zh" ? nameZh(id) : lang === "both" ? `${nameEn(id)} ${nameZh(id)}` : nameEn(id);
 
 // ---------- time helpers
-const fmtDay = new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric"});
-const fmtFull = new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
-function ago(iso){
-  const d = new Date(iso), mins = Math.round((Date.now()-d)/60000);
-  if (isNaN(d)) return "";
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins} min ago`;
-  const h = Math.round(mins/60);
-  if (h < 24) return `${h} hr ago`;
-  return fmtDay.format(d);
+function fmt(d, full){
+  return new Intl.DateTimeFormat(T().locale, full ? {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"} : {month:"short",day:"numeric"}).format(d);
 }
+function ago(iso){
+  const d = new Date(iso); if (isNaN(d)) return "";
+  const mins = Math.round((Date.now()-d)/60000);
+  if (mins < 1) return T().now;
+  if (mins < 60) return T().mins(mins);
+  const h = Math.round(mins/60);
+  if (h < 24) return T().hours(h);
+  return fmt(d);
+}
+
+// ---------- apply language to all fixed text
+function applyLang(){
+  const t = T();
+  document.documentElement.lang = t.htmlLang;
+  document.title = t.title;
+  $("brand").textContent = t.brand;
+  $("lg-lo").textContent = t.fewer; $("lg-hi").textContent = t.more;
+  $("map").setAttribute("aria-label", t.mapLabel);
+  document.querySelector(".zoom").setAttribute("aria-label", t.zoomGroup);
+  $("zin").setAttribute("aria-label", t.zin); $("zout").setAttribute("aria-label", t.zout);
+  $("zreset").setAttribute("aria-label", t.fitLabel); $("zreset").textContent = t.fit;
+  strip.setAttribute("aria-label", t.stripLabel);
+  $("lang-group").setAttribute("aria-label", t.langLabel);
+  $("close").setAttribute("aria-label", t.close);
+  document.querySelectorAll("#lang-group button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false"));
+}
+function setLang(l){
+  if (l === lang) return;
+  lang = l;
+  try { localStorage.setItem("newsmap-lang", l); } catch {}
+  applyLang();
+  if (lastError) showError(lastError);
+  else if (NEWS) { renderSummary(); sortCountries(); buildStrip(); draw(); if (selected) select(selected, true); }
+  else notice.textContent = T().loading;
+}
+document.querySelectorAll("#lang-group button").forEach(b => b.onclick = () => setLang(b.dataset.lang));
 
 // ---------- load
 async function load(){
-  notice.hidden = false; notice.textContent = "Loading today's news…";
+  lastError = null;
+  notice.hidden = false; notice.textContent = T().loading;
   try{
     if (location.protocol === "file:") throw {kind:"file"};
     const get = async (file, opts) => {
@@ -204,176 +328,197 @@ async function load(){
       try { return await r.json(); } catch { throw {kind:"broken", file}; }
     };
     const [geo, news] = await Promise.all([ get("data/world.json"), get("data/news.json", {cache:"no-cache"}) ]);
-    GEO = geo;
-    names = new Map(GEO.features.map(f=>[f.id,f.properties.n]));
-    const valid = new Set(names.keys());
+    GEO = geo; NEWS = news;
+    GEO.features.forEach(f => { namesEn.set(f.id, f.properties.n); if (f.properties.zh) namesZh.set(f.id, f.properties.zh); });
     byCountry = new Map();
-    (news.stories||[]).forEach(n=>n.c.forEach(id=>{
-      if(!valid.has(id)) return;
-      if(!byCountry.has(id)) byCountry.set(id,[]);
+    (news.stories||[]).forEach(n => n.c.forEach(id => {
+      if (!namesEn.has(id)) return;
+      if (!byCountry.has(id)) byCountry.set(id, []);
       byCountry.get(id).push(n);
     }));
-    byCountry.forEach(a=>a.sort((x,y)=>y.d.localeCompare(x.d)));
-    countries = [...byCountry.keys()].sort((a,b)=>byCountry.get(b).length-byCountry.get(a).length || nameOf(a).localeCompare(nameOf(b)));
-    maxN = d3.max(countries, id=>byCountry.get(id).length) || 1;
-    const total = new Set([].concat(...[...byCountry.values()].map(a=>a.map(s=>s.id||s.u)))).size;
-
-    const up = news.updated ? new Date(news.updated) : null;
-    $("summary").innerHTML = `<strong>${total} stories</strong> in ${countries.length} countries.` +
-      (up && !isNaN(up) ? ` Updated <time datetime="${news.updated}" title="${fmtFull.format(up)}">${ago(news.updated)}</time>.` : "");
-    $("sb-foot").textContent = up && !isNaN(up) ? `News updated ${fmtFull.format(up)}. Links open the original article in a new tab.` : "Links open the original article in a new tab.";
-
-    buildStrip();
-    draw();
-    startView();
-    if (!countries.length){ notice.textContent = "No stories have been collected yet. The next update will fill the map."; }
-    else notice.hidden = true;
+    byCountry.forEach(a => a.sort((x,y) => y.d.localeCompare(x.d)));
+    maxN = d3.max([...byCountry.values()], a => a.length) || 1;
+    sortCountries(); renderSummary(); buildStrip(); draw(); startView();
+    if (!countries.length) notice.textContent = T().empty; else notice.hidden = true;
   }catch(e){
-    const msg = {
-      file: "This page was opened as a file, so the browser won't let it read its news data. Open your GitHub Pages address instead, or preview it with <code>python3 -m http.server</code> (see the README).",
-      missing: `<code>${e.file}</code> wasn't found on the site. Check that the <code>data</code> folder, with both files inside it, was uploaded to the repository.`,
-      broken: `<code>${e.file}</code> is damaged or empty. Re-upload it, or run the update workflow on the Actions tab.`,
-      status: `The site answered with error ${e.status} for <code>${e.file}</code>. Try again in a minute.`,
-      network: "Couldn't reach the site. Check your internet connection and try again."
-    }[e && e.kind] || `Something went wrong while showing the news (${(e && e.message) || e}).`;
-    notice.innerHTML = msg + "<br><button id='retry'>Try again</button>";
-    $("retry").onclick = load;
+    lastError = e; showError(e);
     console.error("Newsmap load error: " + (e instanceof Error ? e.stack : JSON.stringify(e)));
   }
+}
+function showError(e){
+  const E = T().err;
+  const msg = e && e.kind === "file" ? E.file
+    : e && e.kind === "missing" ? E.missing(e.file)
+    : e && e.kind === "broken" ? E.broken(e.file)
+    : e && e.kind === "status" ? E.status(e.file, e.status)
+    : e && e.kind === "network" ? E.network
+    : E.other((e && e.message) || e);
+  notice.hidden = false;
+  notice.innerHTML = msg + `<br><button id="retry">${T().retry}</button>`;
+  $("retry").onclick = load;
+}
+function sortCountries(){
+  const coll = new Intl.Collator(T().locale);
+  countries = [...byCountry.keys()].sort((a,b) => byCountry.get(b).length - byCountry.get(a).length || coll.compare(nameOf(a), nameOf(b)));
+}
+function renderSummary(){
+  const total = new Set([].concat(...[...byCountry.values()].map(a => a.map(s => s.id || s.u)))).size;
+  const up = NEWS.updated ? new Date(NEWS.updated) : null, ok = up && !isNaN(up);
+  $("summary").innerHTML = T().summary(total, countries.length || byCountry.size) +
+    (ok ? T().updated(`<time datetime="${NEWS.updated}" title="${fmt(up, true)}">${ago(NEWS.updated)}</time>`) : "");
+  $("sb-foot").textContent = T().foot(ok ? fmt(up, true) : "");
 }
 
 // ---------- map
 function heat(n){
   const cs = getComputedStyle(document.documentElement);
   const lo = cs.getPropertyValue("--heat-lo").trim(), hi = cs.getPropertyValue("--heat-hi").trim();
-  const t = maxN<=1 ? 1 : Math.sqrt((n-1)/(maxN-1));
-  return d3.interpolateRgb(lo,hi)(.15+.85*t);
+  const t = maxN <= 1 ? 1 : Math.sqrt((n-1)/(maxN-1));
+  return d3.interpolateRgb(lo, hi)(.15 + .85*t);
 }
 function draw(){
-  if(!GEO) return;
+  if (!GEO) return;
   const w = svg.node().clientWidth, h = svg.node().clientHeight, small = w < 640;
-  projection = d3.geoNaturalEarth1().fitExtent([[12, small?90:70],[w-12,h-(small?70:80)]], GEO);
+  projection = d3.geoNaturalEarth1().fitExtent([[12, small?90:70],[w-12, h-(small?70:80)]], GEO);
   path = d3.geoPath(projection);
 
-  gLand.selectAll("path").data(GEO.features, d=>d.id).join("path")
-    .attr("class", d=>"country"+(byCountry.has(d.id)?" has":"")+(d.id===selected?" sel":""))
+  gLand.selectAll("path").data(GEO.features, d => d.id).join("path")
+    .attr("class", d => "country" + (byCountry.has(d.id) ? " has" : "") + (d.id === selected ? " sel" : ""))
     .attr("d", path)
-    .style("fill", d=>byCountry.has(d.id)?heat(byCountry.get(d.id).length):null)
-    .on("mousemove", (e,d)=>showTip(e,d.id)).on("mouseleave", hideTip)
-    .on("click", (e,d)=>{ if(byCountry.has(d.id)) select(d.id); });
+    .style("fill", d => byCountry.has(d.id) ? heat(byCountry.get(d.id).length) : null)
+    .on("mousemove", (e,d) => showTip(e, d.id)).on("mouseleave", hideTip)
+    .on("click", (e,d) => { if (byCountry.has(d.id)) select(d.id); });
 
-  const bd = countries.map(id=>{
-    const f = GEO.features.find(x=>x.id===id);
+  const bd = countries.map(id => {
+    const f = GEO.features.find(x => x.id === id);
     const p = projection(ANCHOR[id] || d3.geoCentroid(f));
     return {id, x:p[0], y:p[1], n:byCountry.get(id).length};
   });
-  const b = gBadges.selectAll("g.badge").data(bd, d=>d.id).join(enter=>{
-    const g = enter.append("g").attr("class","badge"); g.append("circle"); g.append("text"); return g;
+  const b = gBadges.selectAll("g.badge").data(bd, d => d.id).join(enter => {
+    const g = enter.append("g").attr("class", "badge"); g.append("circle"); g.append("text"); return g;
   });
-  b.classed("sel", d=>d.id===selected)
-   .attr("transform", d=>`translate(${d.x},${d.y}) scale(${1/k})`)
-   .on("mousemove", (e,d)=>showTip(e,d.id)).on("mouseleave", hideTip)
-   .on("click", (e,d)=>{ e.stopPropagation(); select(d.id); });
-  const tiny = Math.min(w,h) < 500;
-  b.select("circle").attr("r", d=>(d.n>=100?15:d.n>=10?13:11) - (tiny?2.5:0));
-  b.select("text").style("font-size", tiny?"9.5px":null);
-  b.select("text").text(d=>d.n);
+  b.classed("sel", d => d.id === selected)
+   .attr("transform", d => `translate(${d.x},${d.y}) scale(${1/k})`)
+   .on("mousemove", (e,d) => showTip(e, d.id)).on("mouseleave", hideTip)
+   .on("click", (e,d) => { e.stopPropagation(); select(d.id); });
+  const tiny = Math.min(w, h) < 500;
+  b.select("circle").attr("r", d => (d.n>=100?15:d.n>=10?13:11) - (tiny?2.5:0));
+  b.select("text").style("font-size", tiny ? "9.5px" : null).text(d => d.n);
 }
-function showTip(e,id){
-  const n = byCountry.get(id)?.length || 0;
-  tip.textContent = n ? `${nameOf(id)}: ${n} ${n===1?"story":"stories"}` : `${nameOf(id)}: no stories right now`;
+function showTip(e, id){
+  tip.textContent = T().tip(nameOf(id), byCountry.get(id)?.length || 0);
   const r = svg.node().getBoundingClientRect();
-  tip.style.left = (e.clientX-r.left)+"px"; tip.style.top = (e.clientY-r.top)+"px";
+  tip.style.left = (e.clientX - r.left) + "px"; tip.style.top = (e.clientY - r.top) + "px";
   tip.classList.add("on");
 }
 function hideTip(){ tip.classList.remove("on"); }
 
-const zoom = d3.zoom().scaleExtent([1,12]).on("zoom", e=>{
+const zoom = d3.zoom().scaleExtent([1,12]).on("zoom", e => {
   if (e.sourceEvent) userMoved = true;
   k = e.transform.k; root.attr("transform", e.transform);
-  gBadges.selectAll("g.badge").attr("transform", d=>`translate(${d.x},${d.y}) scale(${1/k})`);
+  gBadges.selectAll("g.badge").attr("transform", d => `translate(${d.x},${d.y}) scale(${1/k})`);
   hideTip();
 });
 svg.call(zoom).on("dblclick.zoom", null);
-$("zin").onclick = ()=>(userMoved=true)&&svg.transition().duration(250).call(zoom.scaleBy, 1.6);
-$("zout").onclick = ()=>(userMoved=true)&&svg.transition().duration(250).call(zoom.scaleBy, 1/1.6);
-$("zreset").onclick = ()=>(userMoved=true)&&svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity);
-
-// ---------- country strip
-function buildStrip(){
-  strip.innerHTML = "";
-  countries.forEach(id=>{
-    const b = document.createElement("button");
-    b.className = "chip"; b.dataset.id = id; b.setAttribute("aria-pressed", id===selected?"true":"false");
-    b.innerHTML = `<span></span><b></b>`;
-    b.querySelector("span").textContent = nameOf(id);
-    b.querySelector("b").textContent = byCountry.get(id).length;
-    b.onclick = ()=>select(id);
-    strip.appendChild(b);
-  });
-}
-
-// ---------- sidebar
-function select(id){
-  if(!byCountry.has(id)) return;
-  selected = id;
-  gLand.selectAll("path").classed("sel", d=>d.id===id);
-  gBadges.selectAll("g.badge").classed("sel", d=>d.id===id);
-  strip.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed", c.dataset.id===id?"true":"false"));
-  const items = byCountry.get(id);
-  $("sb-title").textContent = nameOf(id);
-  $("sb-sub").textContent = `${items.length} ${items.length===1?"story":"stories"}, newest first`;
-  list.innerHTML = "";
-  items.forEach(n=>{
-    const li = document.createElement("li"); li.className = "item";
-    const meta = document.createElement("div"); meta.className = "meta";
-    const s1 = document.createElement("span"); s1.textContent = n.src;
-    const s2 = document.createElement("span"); s2.textContent = ago(n.d); s2.title = fmtFull.format(new Date(n.d));
-    meta.append(s1,s2);
-    const h = document.createElement("h3"), a = document.createElement("a");
-    a.href = n.u; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = n.t; h.appendChild(a);
-    li.append(meta,h);
-    if(n.s){ const p = document.createElement("p"); p.textContent = n.s; li.appendChild(p); }
-    const row = document.createElement("div"); row.className = "row";
-    const read = document.createElement("a"); read.className = "read"; read.href = n.u; read.target = "_blank"; read.rel = "noopener noreferrer";
-    read.textContent = `Read on ${n.src}`; row.appendChild(read);
-    n.c.filter(c=>c!==id && byCountry.has(c)).forEach(c=>{
-      const t = document.createElement("button"); t.className = "also"; t.textContent = `Also in ${nameOf(c)}`;
-      t.onclick = ()=>select(c); row.appendChild(t);
-    });
-    li.appendChild(row); list.appendChild(li);
-  });
-  list.scrollTop = 0;
-  sidebar.classList.add("open"); sidebar.setAttribute("aria-hidden","false");
-  history.replaceState(null, "", "#"+encodeURIComponent(id));
-  $("close").focus({preventScroll:true});
-}
-function closeSidebar(){
-  sidebar.classList.remove("open"); sidebar.setAttribute("aria-hidden","true");
-  const prev = selected; selected = null;
-  gLand.selectAll("path").classed("sel", false);
-  gBadges.selectAll("g.badge").classed("sel", false);
-  strip.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));
-  history.replaceState(null, "", location.pathname + location.search);
-  const chip = strip.querySelector(`[data-id="${prev}"]`); if(chip) chip.focus({preventScroll:true});
-}
-$("close").onclick = closeSidebar;
-document.addEventListener("keydown", e=>{ if(e.key==="Escape" && sidebar.classList.contains("open")) closeSidebar(); });
+$("zin").onclick = () => { userMoved = true; svg.transition().duration(250).call(zoom.scaleBy, 1.6); };
+$("zout").onclick = () => { userMoved = true; svg.transition().duration(250).call(zoom.scaleBy, 1/1.6); };
+$("zreset").onclick = () => { userMoved = true; svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity); };
 
 function startView(){
   const w = svg.node().clientWidth, h = svg.node().clientHeight;
   if (w >= 600 || h < w * 1.2) { svg.call(zoom.transform, d3.zoomIdentity); return; }
   // Tall phone screen: zoom so the map uses the height, centred on Europe, Africa and the Middle East.
-  const [[x0,y0],[x1,y1]] = path.bounds(GEO);
+  const [[, y0], [, y1]] = path.bounds(GEO);
   const kk = Math.min(Math.max((h*0.62)/(y1-y0), 1), 3);
   const [cx, cy] = projection([22, 18]);
   svg.call(zoom.transform, d3.zoomIdentity.translate(w/2 - kk*cx, h/2 - kk*cy + 10).scale(kk));
 }
-let rt; window.addEventListener("resize", ()=>{ clearTimeout(rt); rt = setTimeout(()=>{ draw(); if(!userMoved) startView(); },120); });
-strip.addEventListener("wheel", e=>{ if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){ strip.scrollLeft += e.deltaY; e.preventDefault(); } }, {passive:false});
+
+// ---------- country strip
+function buildStrip(){
+  strip.innerHTML = "";
+  countries.forEach(id => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.dataset.id = id; b.setAttribute("aria-pressed", id === selected ? "true" : "false");
+    const s = document.createElement("span");
+    if (lang === "both") { s.textContent = nameEn(id); const z = document.createElement("span"); z.className = "zh"; z.lang = "zh-CN"; z.textContent = nameZh(id); s.appendChild(z); }
+    else s.textContent = nameOf(id);
+    const c = document.createElement("b"); c.textContent = byCountry.get(id).length;
+    b.append(s, c); b.onclick = () => select(id);
+    strip.appendChild(b);
+  });
+}
+strip.addEventListener("wheel", e => { if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { strip.scrollLeft += e.deltaY; e.preventDefault(); } }, {passive:false});
+
+// ---------- sidebar
+function select(id, keepScroll){
+  if (!byCountry.has(id)) return;
+  selected = id;
+  const t = T();
+  gLand.selectAll("path").classed("sel", d => d.id === id);
+  gBadges.selectAll("g.badge").classed("sel", d => d.id === id);
+  strip.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.id === id ? "true" : "false"));
+  const items = byCountry.get(id);
+  $("sb-title").textContent = nameOf(id);
+  $("sb-sub").textContent = t.sbSub(items.length);
+  const scroll = list.scrollTop;
+  list.innerHTML = "";
+  if (t.srcNote) { const li = document.createElement("li"); li.className = "item"; li.style.paddingBottom = "0"; li.style.borderBottom = "0";
+    const p = document.createElement("p"); p.className = "src-note"; p.textContent = t.srcNote; li.appendChild(p); list.appendChild(li); }
+  items.forEach(n => {
+    const li = document.createElement("li"); li.className = "item";
+    const meta = document.createElement("div"); meta.className = "meta";
+    const s1 = document.createElement("span"); s1.textContent = n.src;
+    const s2 = document.createElement("span"); s2.textContent = ago(n.d); if (!isNaN(new Date(n.d))) s2.title = fmt(new Date(n.d), true);
+    meta.append(s1, s2);
+    const hasZh = !!n.tz;
+    const useZh = lang === "zh" && hasZh;
+    const h = document.createElement("h3"), a = document.createElement("a");
+    a.href = n.u; a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.textContent = useZh ? n.tz : n.t; a.lang = useZh ? "zh-CN" : "en"; h.appendChild(a);
+    li.append(meta, h);
+    if (lang === "both" && hasZh) {
+      const z = document.createElement("p"); z.className = "alt-title"; z.lang = "zh-CN"; z.textContent = n.tz; li.appendChild(z);
+    }
+    const sum = useZh ? (n.sz || "") : n.s;
+    if (sum) { const p = document.createElement("p"); p.textContent = sum; p.lang = useZh ? "zh-CN" : "en"; li.appendChild(p); }
+    if (lang === "both" && hasZh && n.sz) {
+      const p = document.createElement("p"); p.className = "alt-sum"; p.lang = "zh-CN"; p.textContent = n.sz; li.appendChild(p);
+    }
+    const row = document.createElement("div"); row.className = "row";
+    const read = document.createElement("a"); read.className = "read"; read.href = n.u; read.target = "_blank"; read.rel = "noopener noreferrer";
+    read.textContent = t.read(n.src); row.appendChild(read);
+    n.c.filter(c => c !== id && byCountry.has(c)).forEach(c => {
+      const b = document.createElement("button"); b.className = "also"; b.textContent = t.also(nameOf(c));
+      b.onclick = () => select(c); row.appendChild(b);
+    });
+    li.appendChild(row); list.appendChild(li);
+  });
+  list.scrollTop = keepScroll ? scroll : 0;
+  if (!keepScroll) {
+    sidebar.classList.add("open"); sidebar.setAttribute("aria-hidden", "false");
+    history.replaceState(null, "", "#" + encodeURIComponent(id));
+    $("close").focus({preventScroll:true});
+  }
+}
+function closeSidebar(){
+  sidebar.classList.remove("open"); sidebar.setAttribute("aria-hidden", "true");
+  const prev = selected; selected = null;
+  gLand.selectAll("path").classed("sel", false);
+  gBadges.selectAll("g.badge").classed("sel", false);
+  strip.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", "false"));
+  history.replaceState(null, "", location.pathname + location.search);
+  const chip = strip.querySelector(`[data-id="${prev}"]`); if (chip) chip.focus({preventScroll:true});
+}
+$("close").onclick = closeSidebar;
+document.addEventListener("keydown", e => { if (e.key === "Escape" && sidebar.classList.contains("open")) closeSidebar(); });
+
+let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { draw(); if (!userMoved) startView(); }, 120); });
 window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", draw);
 
-load().then(()=>{ const id = decodeURIComponent(location.hash.slice(1)); if(id) select(id); });
+applyLang();
+load().then(() => { const id = decodeURIComponent(location.hash.slice(1)); if (id) select(id); });
+
 </script>
 </body>
 </html>

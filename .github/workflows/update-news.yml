@@ -34,6 +34,8 @@ jobs:
       - name: Fetch today's news
         # If every feed is down, keep publishing yesterday's data instead of failing.
         continue-on-error: true
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python3 scripts/fetch_news.py
 
       - name: Save the new data to the repository

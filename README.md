@@ -3,7 +3,7 @@
 A world map of today's news. Each country shows how many stories mention it; click a
 country to see the stories and open the original articles.
 
-The site is free to run. It lives on **GitHub Pages**, and a **GitHub Actions** job
+The site can run without a paid translation API. It lives on **GitHub Pages**, and a **GitHub Actions** job
 refreshes the news every day by reading RSS feeds from major international outlets
 (BBC, Al Jazeera, The Guardian, NPR, DW, France 24, CBC).
 
@@ -12,33 +12,47 @@ refreshes the news every day by reading RSS feeds from major international outle
 | Path | What it does |
 |---|---|
 | `index.html` | The website: map, country list and sidebar |
-| `data/world.json` | Country shapes for the map (Natural Earth, public domain) |
+| `data/world.json` | Country shapes and English/Chinese country names for the map (Natural Earth, public domain) |
 | `data/news.json` | Today's stories. Rewritten automatically every day |
 | `scripts/fetch_news.py` | Reads the feeds, decides which countries each story is about, writes `data/news.json` |
 | `scripts/feeds.json` | The list of news feeds. Add or remove sources here |
 | `scripts/countries.py` | Words that link a headline to a country (names, capitals, cities, leaders) |
 | `.github/workflows/update-news.yml` | Runs the update daily and publishes the site |
 
-## Put it online (about 10 minutes)
-
-1. **Create a GitHub account** at github.com if you don't have one.
-2. **Create a new repository.** Click **+** → **New repository**, name it `newsmap`,
-   choose **Public**, and click **Create repository**.
-3. **Upload the files.** On the new repository page click **uploading an existing file**,
-   then drag in everything from this folder, including the `data`, `scripts` and
-   `.github` folders. Click **Commit changes**.
-   *The `.github` folder is hidden on Mac and Windows. On Mac press
-   Cmd+Shift+. in Finder to show it; on Windows turn on "Hidden items" in File Explorer.*
-4. **Turn on GitHub Pages.** Go to **Settings** → **Pages**. Under **Source** choose
-   **GitHub Actions**.
-5. **Run the first update.** Go to the **Actions** tab. If asked, click
-   **I understand my workflows, go ahead and enable them**. Open
-   **Update news and publish site** → **Run workflow** → **Run workflow**.
-6. **Open your site.** When the run shows a green check (a minute or two), the address
-   is shown on the run page and under **Settings → Pages**. It looks like
-   `https://YOUR-USERNAME.github.io/newsmap/`.
-
 From then on the news refreshes every day at 11:00 UTC by itself.
+
+## Languages: EN, CN, Both
+
+The switch in the top-left corner changes the language. **EN** shows everything in English,
+**CN** shows the interface, country names and stories in Simplified Chinese, and **Both** shows
+English with Chinese next to every country name, headline and summary. The site remembers each
+visitor's choice, starts in Chinese for visitors whose browser is set to Chinese, and you can
+share a link that opens in a set language: `…/newsmap/?lang=zh`, `?lang=en` or `?lang=both`.
+
+### Turning on Chinese translation of the news
+
+The news feeds are in English, so the daily job translates new stories into Chinese using the
+Google Gemini API. This is optional; without it, CN mode shows the Chinese interface and country names,
+with English headlines.
+
+1. Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/apikey).
+   See Google’s [API key guide](https://ai.google.dev/gemini-api/docs/api-key) for setup details.
+2. In your GitHub repository go to **Settings → Secrets and variables → Actions →
+   New repository secret**. Name it `GEMINI_API_KEY` and paste the key. Click **Add secret**.
+3. Run the workflow once from the **Actions** tab. The log shows a line such as
+   `Translated 142 new stories into Chinese.`
+
+The workflow passes this secret to the updater as `GEMINI_API_KEY`. For local updates, set
+the same environment variable before running `python3 scripts/fetch_news.py`.
+
+Only new stories are translated; earlier translations are reused to reduce API usage.
+Costs and quotas depend on your Gemini model and account; check the current
+[Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing).
+The default model is `gemini-flash-lite-latest`, with `gemini-flash-latest` as a fallback.
+You can set `NEWSMAP_MODEL` in the workflow’s **Fetch today’s news** step to a Gemini model
+ID or a comma-separated list of model IDs, tried in order if a model is unavailable.
+These `latest` aliases can change over time; use a specific model ID if you want to pin a version.
+Translations are automatic and can contain mistakes; every story links to the English original.
 
 ## Common changes
 
